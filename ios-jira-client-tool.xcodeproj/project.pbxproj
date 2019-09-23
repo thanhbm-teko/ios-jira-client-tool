@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1AFB7ED62338DC7800232691 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFB7ED52338DC7800232691 /* main.swift */; };
+		1AFB7EDD2338DF1A00232691 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFB7EDC2338DF1A00232691 /* Api.swift */; };
+		1AFB7EE32338E39100232691 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFB7EE22338E39100232691 /* Result.swift */; };
+		1AFB7EE52338E3E900232691 /* ActionTestPlanRunSummaries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AFB7EE42338E3E900232691 /* ActionTestPlanRunSummaries.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,11 @@
 /* Begin PBXFileReference section */
 		1AFB7ED22338DC7800232691 /* ios-jira-client-tool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ios-jira-client-tool"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AFB7ED52338DC7800232691 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1AFB7EDC2338DF1A00232691 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
+		1AFB7EE12338E0EB00232691 /* result.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = result.json; sourceTree = "<group>"; };
+		1AFB7EE22338E39100232691 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		1AFB7EE42338E3E900232691 /* ActionTestPlanRunSummaries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTestPlanRunSummaries.swift; sourceTree = "<group>"; };
+		1AFB7EE62338E3FD00232691 /* summaries.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = summaries.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +65,38 @@
 		1AFB7ED42338DC7800232691 /* ios-jira-client-tool */ = {
 			isa = PBXGroup;
 			children = (
+				1AFB7EE02338E0D200232691 /* Data */,
+				1AFB7EDF2338DF6F00232691 /* Networking */,
+				1AFB7EDE2338DF6900232691 /* Entity */,
 				1AFB7ED52338DC7800232691 /* main.swift */,
 			);
 			path = "ios-jira-client-tool";
+			sourceTree = "<group>";
+		};
+		1AFB7EDE2338DF6900232691 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				1AFB7EE22338E39100232691 /* Result.swift */,
+				1AFB7EE42338E3E900232691 /* ActionTestPlanRunSummaries.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		1AFB7EDF2338DF6F00232691 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				1AFB7EDC2338DF1A00232691 /* Api.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		1AFB7EE02338E0D200232691 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				1AFB7EE12338E0EB00232691 /* result.json */,
+				1AFB7EE62338E3FD00232691 /* summaries.json */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,6 +157,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AFB7EE32338E39100232691 /* Result.swift in Sources */,
+				1AFB7EDD2338DF1A00232691 /* Api.swift in Sources */,
+				1AFB7EE52338E3E900232691 /* ActionTestPlanRunSummaries.swift in Sources */,
 				1AFB7ED62338DC7800232691 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
