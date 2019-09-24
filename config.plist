@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>cycleName</key>
-	<string>VNSI-253 cycle 1</string>
+	<string>Round 1</string>
 	<key>cycleFolder</key>
 	<string>Sprint1</string>
 	<key>folder</key>
 	<string>/APP</string>
 	<key>jiraPassword</key>
-	<string>4Me!=_R[</string>
+	<string></string>
 	<key>jiraUsername</key>
-	<string>tung.nx</string>
+	<string></string>
 	<key>device</key>
 	<string>iPhone 8</string>
 	<key>projectKey</key>
