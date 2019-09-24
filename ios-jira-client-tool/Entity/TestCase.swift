@@ -9,6 +9,7 @@
 import Foundation
 
 class TestCase {
+    var key: String?
     var duration: String?
     var name: String?
     var identifier: String?
@@ -18,6 +19,6 @@ class TestCase {
         self.name = name
         self.duration = duration
         self.identifier = identifier
-        self.status = status
+        self.status = status == "Success" ? "Pass" : "Fail"
     }
 }

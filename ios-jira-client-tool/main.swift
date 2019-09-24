@@ -9,6 +9,8 @@
 import Foundation
 import Darwin
 
+let resultPath = "./TestSummaries.xcresult"
+
 enum Command: String {
     case test
 }
@@ -35,10 +37,10 @@ func shell(_ command: String) -> String {
     let pipe = Pipe()
     task.standardOutput = pipe
     task.launch()
-
+    
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     let output: String = NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
-
+    task.waitUntilExit()
     return output
 }
 
@@ -54,7 +56,7 @@ guard let command = Command(rawValue: action) else {
     exit(0)
 }
 
-let testCasesArg = CommandLine.arguments.first { $0.hasPrefix("test-cases=")}
+let testCasesArg = CommandLine.arguments.first { $0.hasPrefix("-test-cases=")}
 
 guard let firstEqualIndex = testCasesArg?.firstIndex(of: "=") else {
     print("Cannot find test cases!")
@@ -66,12 +68,23 @@ guard let testCasesString = testCasesArg?[firstEqualIndex...].dropFirst() else {
     exit(0)
 }
 
-let workspace = "VNShop.xcworkspace"
-let scheme = "VNShop"
-let destination = "name=iPhone 8"
-let testCases1 = "VNShopTests/ProductAttributesViewControllerTests"
-let testCases2 = "VNShopTests/SearchProductViewControllerTests/testNumberOfSections"
+let testCases = testCasesString.split(separator: ",").map { String($0) }
 
+let issueLinkArg = CommandLine.arguments.first { $0.hasPrefix("-issue-key=")}
+
+guard let issueLinkIndex = issueLinkArg?.firstIndex(of: "=") else {
+    print("Cannot find issue key!")
+    exit(0)
+}
+
+guard let issueLink = issueLinkArg?[issueLinkIndex...].dropFirst() else {
+    print("Cannot find issue key!")
+    exit(0)
+}
+
+let issueKey = String(issueLink)
+
+// - MARK: Begin load configurations
 let configPath = Bundle.main.path(forResource: "config", ofType: "plist")
 
 guard let path = configPath, FileManager.default.fileExists(atPath: path) else {
@@ -80,31 +93,102 @@ guard let path = configPath, FileManager.default.fileExists(atPath: path) else {
 }
 
 let configurations = FileUtils.loadConfig(path: path)
-print(configurations)
-//
-//run("xcodebuild", "test", "-workspace", workspace, "-scheme", scheme, "-destination", destination, "-derivedDataPath", "./build", "-only-testing:\(testCases1)", "-only-testing:\(testCases2)", "-resultBundlePath", "./TestSummaries.xcresult")
-//
-//let out = shell("xcrun xcresulttool get --format json --path ./TestSummaries.xcresult")
-//
-//guard let data = out.data(using: .utf8), let result = try? JSONDecoder().decode(Result.self, from: data) else {
-//    print("Cannot process result")
-//    exit(0)
-//}
-//
-//guard let summaryId = result.actions?.values?.first?.actionResult?.testsRef?.id?.value else {
-//    print("Cannot get test summaries")
-//    exit(0)
-//}
-//
-//let summary = shell("xcrun xcresulttool get --format json --path ./TestSummaries.xcresult --id \(summaryId)")
-//
-//guard let summaryData = summary.data(using: .utf8), let summaries = try? JSONDecoder().decode(TestSummaries.self, from: summaryData) else {
-//    print("Cannot process summaries")
-//    exit(0)
-//}
-//
-//let cases: [TestCase] = summaries.summaries?.values?.first?.testableSummaries?.values?.first?.tests?.testCases ?? [TestCase]()
-//cases.forEach { c in
-//    print(c.identifier ?? "")
-//}
-//print("[Complete] \(cases.count) test cases.")
+
+let username = configurations?["jiraUsername"] as! String
+let token = configurations?["jiraPassword"] as! String
+let projectKey = configurations?["projectKey"] as! String
+let scheme = configurations?["scheme"] as! String
+let workspace = configurations?["workspace"] as! String
+let device = configurations?["device"] as! String
+let folder = configurations?["folder"] as! String
+let cycleFolder = configurations?["cycleFolder"] as! String
+let cycleName = configurations?["cycleName"] as! String
+
+guard let auth = "\(username):\(token)".data(using: .utf8)?.base64EncodedString() else {
+    print("Cannot get credentials!")
+    exit(0)
+}
+
+var commandString = "xcodebuild test -workspace \(workspace) -scheme \(scheme) -destination \"name=\(device)\" -resultBundlePath \(resultPath) -derivedDataPath ./build"
+
+testCases.forEach { string in
+    commandString = commandString + " -only-testing:\(string) "
+}
+
+//run("rm -rf \(resultPath)")
+
+if FileManager.default.fileExists(atPath: resultPath) {
+    try? FileManager.default.removeItem(atPath: resultPath)
+}
+
+_ = shell(commandString)
+
+let out = shell("xcrun xcresulttool get --format json --path \(resultPath)")
+
+guard let data = out.data(using: .utf8), let result = try? JSONDecoder().decode(Result.self, from: data) else {
+    print("Cannot process result")
+    exit(0)
+}
+
+guard let summaryId = result.actions?.values?.first?.actionResult?.testsRef?.id?.value else {
+    print("Cannot get test summaries")
+    exit(0)
+}
+
+let summary = shell("xcrun xcresulttool get --format json --path ./TestSummaries.xcresult --id \(summaryId)")
+
+guard let summaryData = summary.data(using: .utf8), let summaries = try? JSONDecoder().decode(TestSummaries.self, from: summaryData) else {
+    print("Cannot process summaries")
+    exit(0)
+}
+
+let api = Api()
+
+let semaphore = DispatchSemaphore(value: 0)
+
+let cases: [TestCase] = summaries.summaries?.values?.first?.testableSummaries?.values?.first?.tests?.testCases ?? [TestCase]()
+
+let dispatchGroup = DispatchGroup()
+
+cases.forEach { c in
+    
+    dispatchGroup.enter()
+    
+    try? api.findTestCase(authorization: auth, projectKey: projectKey, name: c.identifier ?? "", completion: { (cases, error) in
+        if let matches = cases?.first {
+            print("Test case \(c.identifier ?? "") existed on jira")
+            c.key = matches.key
+            dispatchGroup.leave()
+        }
+        else {
+            try? api.createTestCase(authorization: auth, projectKey: projectKey, folder: folder, issueKey: issueKey, testCase: c) { (response, error) in
+                c.key = response?.key
+                print("Test case \(c.key ?? "") is created successfully")
+
+                dispatchGroup.leave()
+            }
+        }
+        
+    })
+    
+}
+
+dispatchGroup.notify(queue: DispatchQueue.main) {
+    let testCases = cases.filter { $0.key != nil }
+    print("[✓] Total \(testCases.count) test cases")
+    try? api.createTestCycle(authorization: auth,
+                             projectKey: projectKey,
+                             cycleName: cycleName,
+                             folder: cycleFolder,
+                             issueKey: issueKey,
+                             testCases: testCases, completion: { (response, error) in
+        if let error = error {
+            print(error)
+        } else if let cycleKey = response?.key {
+            print("[✓] Cycle with key = \(cycleKey) is created successfully")
+        }
+        exit(0)
+    })
+}
+
+dispatchMain()

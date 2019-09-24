@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>cycleName</key>
+	<string>VNSI-253 cycle 1</string>
+	<key>cycleFolder</key>
+	<string>Sprint1</string>
+	<key>folder</key>
+	<string>/APP</string>
 	<key>jiraPassword</key>
 	<string>4Me!=_R[</string>
 	<key>jiraUsername</key>
