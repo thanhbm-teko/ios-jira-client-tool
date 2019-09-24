@@ -8,7 +8,7 @@ Open **Terminal** and run this command:
 
 `./jira-test-tool test -test-cases=${test_cases} -issue-key=${issue_key}`
 
-With `${test_cases}` is test objects for testing, separate by commas and `${issue_key}` is name of the Issue (Task) which needs to be tested.
+With `${test_cases}` is test objects for testing, separated by commas and `${issue_key}` is name of the Issue (Task) which needs to be tested.
 
 Example:
 
@@ -55,25 +55,26 @@ Failing tests:
 
 ** TEST FAILED **
 
-Test case ProductDetailViewControllerTests/testNumberOfSections() existed on jira
-Test case ProductDetailViewControllerTests/testEnumProductDetailSectionType() existed on jira
-Test case ProductDetailOptionalPromotionsCellTests/testPromotionCellForItem() existed on jira
-Test case ProductDetailViewControllerTests/testCellsForDescriptionSection() existed on jira
-Test case ProductDetailOptionalPromotionsCellTests/testPromotionCellForCoupon() existed on jira
-Test case ProductDetailViewControllerTests/testSetupNavigationBar() existed on jira
-Test case ProductDetailViewControllerTests/testCellsForAttributeSection() existed on jira
-Test case ProductDetailViewControllerTests/testNumberOfRowInSection() existed on jira
-Test case ProductDetailViewControllerTests/testFuncBackAction() existed on jira
-Test case ProductDetailViewControllerTests/testCellsForPromotionSection() existed on jira
-Test case ProductDetailViewControllerTests/testVarHasOptionDefinitions() existed on jira
-Test case ProductDetailViewControllerTests/testVarOptionalDefinitions() existed on jira
-Test case ProductDetailViewControllerTests/testHeightForFooterInSection0() existed on jira
-Test case ProductDetailViewControllerTests/testViewForHeaderFooterInSections() existed on jira
-Test case ProductDetailViewControllerTests/testCellsForInfoSection() existed on jira
 Test case ProductDetailOptionalPromotionsCellTests/testPromotionCellForVoucher() existed on jira
+Test case ProductDetailViewControllerTests/testCellsForAttributeSection() existed on jira
+Test case ProductDetailViewControllerTests/testVarHasOptionDefinitions() existed on jira
+Test case ProductDetailOptionalPromotionsCellTests/testPromotionCellForItem() existed on jira
+Test case ProductDetailViewControllerTests/testEnumProductDetailSectionType() existed on jira
+Test case ProductDetailOptionalPromotionsCellTests/testPromotionCellForCoupon() existed on jira
+Test case ProductDetailViewControllerTests/testViewForHeaderFooterInSections() existed on jira
+Test case ProductDetailViewControllerTests/testHeightForFooterInSection0() existed on jira
+Test case ProductDetailViewControllerTests/testFuncBackAction() existed on jira
+Test case ProductDetailViewControllerTests/testSetupNavigationBar() existed on jira
+Test case VNSI-T457 is created successfully
+Test case VNSI-T456 is created successfully
+Test case VNSI-T458 is created successfully
 Test case ProductDetailViewControllerTests/testNumberOfRowsInSection() existed on jira
+Test case ProductDetailViewControllerTests/testCellsForDescriptionSection() existed on jira
+Test case VNSI-T459 is created successfully
+Test case ProductDetailViewControllerTests/testNumberOfRowInSection() existed on jira
 [✓] Total 17 test cases
-[✓] Cycle with key = VNSI-C73 is created successfully
+[✓] Cycle with key = VNSI-C72 is created successfully
+
 ```
 
 
