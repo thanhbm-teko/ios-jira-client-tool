@@ -187,6 +187,9 @@ dispatchGroup.notify(queue: DispatchQueue.main) {
         } else if let cycleKey = response?.key {
             print("[✓] Cycle with key = \(cycleKey) is created successfully")
         }
+        if FileManager.default.fileExists(atPath: resultPath) {
+            try? FileManager.default.removeItem(atPath: resultPath)
+        }
         exit(0)
     })
 }

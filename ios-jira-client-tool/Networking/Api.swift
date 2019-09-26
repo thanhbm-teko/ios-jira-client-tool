@@ -116,7 +116,7 @@ class Api: NetworkRouter {
         dict["projectKey"] = projectKey
         dict["name"] = testCase.identifier
         dict["status"] = "Approved"
-        dict["folder"] = folder
+//        dict["folder"] = folder
         dict["issueLinks"] = [issueKey]
         
         var request = try buildRequest(params: [:],
@@ -131,8 +131,8 @@ class Api: NetworkRouter {
             if let error = error {
                 completion(nil, error.localizedDescription)
             }
-//            let res = String(data: data!, encoding: .utf8)
-//            print(res)
+            let res = String(data: data!, encoding: .utf8)
+            print(res)
             guard let data = data, let response = try? JSONDecoder().decode(Response.self, from: data) else {
                 completion(nil, "Cannot decode response")
                 return
@@ -184,8 +184,8 @@ class Api: NetworkRouter {
             if let error = error {
                 completion(nil, error.localizedDescription)
             }
-//            let res = String(data: data!, encoding: .utf8)
-//            print(res)
+            let res = String(data: data!, encoding: .utf8)
+            print(res)
             guard let data = data, let response = try? JSONDecoder().decode(Response.self, from: data) else {
                 completion(nil, "Cannot decode response")
                 return
